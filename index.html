@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html ng-app="myApp" ng-controller="myCtrl">
+<head>
+	<title>Handy Angular Filters</title>
+	<script src="/bower_components/angular/angular.min.js"></script>
+	<script src="/bower_components/angular-sanitize/angular-sanitize.js"></script>
+	<script src="/app.js"></script>
+	<link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.css">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300" rel="stylesheet">
+	<style>
+	body {
+	  padding:20px;
+	  font-family:'Roboto', Arial, sans;
+	  font-size:14px;
+	  font-weight:300;
+	  color:#444;
+	}
+	h1, h2, h3, h4, h5, h6 {
+	  font-weight:300;
+	}
+	#content-wrap {
+	  margin:0 auto;
+	  max-width:960px;
+	}
+	
+	.box {
+	  background:#A1D490;
+	  padding:20px;
+	  margin:20px 0;
+	}
+	
+	.strong {
+	  font-weight:bold;
+	}
+	</style>
+</head>
+<body ng-view>
+	<div id="content-wrap">
+
+		<h1>Filter Demos</h1>
+		<h2>Raw data:</h2>
+		<div class="box">
+		{{ records }}
+		</div>
+		<h2>detailLink</h2>
+		<p>Generates an &lt;a&gt; tag based on a provided pattern. The filter searches the provided reference object for a matching property and generates a path.</p>
+		<p>Usage: &lt;element ng-bind-html="input|detailLink:referenceObject:'path/:property'"&gt;&lt;/element&gt;</p>
+		<div class="box">
+			<div ng-repeat="record in records" ng-bind-html="record.name|detailLink:record:'records/:id'"></div>
+		</div>
+
+		<h2>truncateToPlainText</h2>
+		<p>Provides a substring of the input, with html tags removed. Useful for creating excerpts or preview text.</p>
+		<p>Usage: input|truncateToPlainText:length:offset</p>
+		<div class="box">
+			<p class="strong">raw text:</p>
+			<div ng-bind-html="records[0].description"></div>
+			<p class="strong">with length 20, offset 0:</p>
+			<div>{{ records[0].description|truncateToPlainText:20:0 }}</div>
+			<p class="strong">with length 20: offset 10:</p>
+			<div>{{ records[0].description|truncateToPlainText:20:10 }}</div>
+		</div>
+
+		<h2>booleanToSymbol</h2>
+		<p>Evaluates an input's truthiness and outputs a corresponding symbol.</p>
+		<p>Usage: input|booleanToSymbol</p>
+		<div class="box">
+			<table>
+				<tr>
+					<td class="strong">Title</td>
+					<td class="strong">Awesome</td>
+					<td class="strong">Filtered</td>
+				</tr>
+				<tr ng-repeat="record in records">
+					<td>{{ record.name }}</td>
+					<td>{{ record.awesome }}</td>
+					<td ng-bind-html="record.awesome|booleanToSymbol"></td>
+				</tr>
+			</table>
+		</div>
+
+
+		<h2>arrayToString</h2>
+		<p>Creates a readable string from an array.</p>
+		<p>Usage: input|arrayToString:separator</p>
+		<div class="box">
+			<table>
+				<tr>
+					<td class="strong">Title</td>
+					<td class="strong">Tags</td>
+					<td class="strong">Filtered</td>
+				</tr>
+				<tr ng-repeat="record in records">
+					<td>{{ record.name }}</td>
+					<td>{{ record.tags }}</td>
+					<td ng-bind-html="record.tags|arrayToString:', '"></td>
+				</tr>
+			</table>
+		</div>
+
+		<h2>printJson</h2>
+		<p>Takes a string of JSON and attempts to create a recursive unordered list.</p>
+		<p>Usage: input|printJson:keys</p>
+		<div class="box">
+			<p class="strong">Raw:</p>
+			{{ jsonString }}
+			<p class="strong">Filtered:</p>
+			<div ng-bind-html="jsonString|printJson"></div>
+			<p class="strong">With keys defined ['name', 'artist']:</p>
+			<div ng-bind-html="jsonString|printJson:selectedKeys"></div>
+		</div>
+	</div>
+</body>
+</html>
